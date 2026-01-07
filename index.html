@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareGuide - Your Path to Success</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    #canvas3d {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-link {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .hero-card {
+      backdrop-filter: blur(20px);
+      background: rgba(52, 69, 154, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(68, 57, 57, 0.37);
+    }
+
+    .feature-card {
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .cta-button {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .icon-wrapper {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 28px;
+      margin-bottom: 1rem;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto">
+  <div class="canvas-container">
+   <canvas id="canvas3d"></canvas>
+  </div>
+  <div class="content-wrapper min-h-full w-full">
+   <nav id="navbar" class="w-full py-6 px-8">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+     <h1 id="site-title" class="text-3xl font-bold">CareGuide</h1>
+     <div class="flex gap-8"><a href="education.html" target="_blank" rel="noopener noreferrer" id="nav-home" class="nav-link text-lg font-medium">Home</a> <a href="Acadimies.html" target="_blank" rel="noopener noreferrer" id="nav-academies" class="nav-link text-lg font-medium">Academies</a> <a href="Skills.html" target="_blank" rel="noopener noreferrer" id="nav-skills" class="nav-link text-lg font-medium">Skills</a> <a href="Carrer.html" target="_blank" rel="noopener noreferrer" id="nav-career" class="nav-link text-lg font-medium">Career</a>
+     </div>
+    </div>
+   </nav>
+   <main class="w-full flex flex-col items-center justify-center px-8 py-12">
+    <div class="hero-card rounded-3xl p-12 max-w-4xl text-center mb-16">
+     <h2 id="hero-title" class="text-6xl font-bold mb-6">Welcome to CareGuide</h2>
+     <p id="hero-subtitle" class="text-2xl mb-10 opacity-90">Your complete platform for education, skills development, and career growth</p><button id="cta-button" class="cta-button px-10 py-4 rounded-full text-xl font-semibold">Get Started</button>
+    </div>
+    <div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+     <div class="feature-card rounded-2xl p-8 text-center">
+      <div id="icon-1" class="icon-wrapper mx-auto">
+       📚
+      </div>
+      <h3 id="feature-1-title" class="text-2xl font-bold mb-3">Quality Education</h3>
+      <p id="feature-1-desc" class="opacity-85">Access comprehensive learning resources and expert-curated courses</p>
+     </div>
+     <div class="feature-card rounded-2xl p-8 text-center">
+      <div id="icon-2" class="icon-wrapper mx-auto">
+       🎓
+      </div>
+      <h3 id="feature-2-title" class="text-2xl font-bold mb-3">Top Academies</h3>
+      <p id="feature-2-desc" class="opacity-85">Connect with leading educational institutions and programs</p>
+     </div>
+     <div class="feature-card rounded-2xl p-8 text-center">
+      <div id="icon-3" class="icon-wrapper mx-auto">
+       ⚡
+      </div>
+      <h3 id="feature-3-title" class="text-2xl font-bold mb-3">Skills Training</h3>
+      <p id="feature-3-desc" class="opacity-85">Develop in-demand skills with practical hands-on training</p>
+     </div>
+     <div class="feature-card rounded-2xl p-8 text-center">
+      <div id="icon-4" class="icon-wrapper mx-auto">
+       🚀
+      </div>
+      <h3 id="feature-4-title" class="text-2xl font-bold mb-3">Career Growth</h3>
+      <p id="feature-4-desc" class="opacity-85">Navigate your career path with expert guidance and opportunities</p>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#1a1a2e",
+      particle_color: "#16213e",
+      text_color: "#ffffff",
+      accent_color: "#0f4c75",
+      button_color: "#3282b8",
+      site_title: "CareGuide",
+      hero_title: "Welcome to CareGuide",
+      hero_subtitle: "Your complete platform for education, skills development, and career growth",
+      cta_button: "Get Started",
+      feature_1_title: "Quality Education",
+      feature_1_desc: "Access comprehensive learning resources and expert-curated courses",
+      feature_2_title: "Top Academies",
+      feature_2_desc: "Connect with leading educational institutions and programs",
+      feature_3_title: "Skills Training",
+      feature_3_desc: "Develop in-demand skills with practical hands-on training",
+      feature_4_title: "Career Growth",
+      feature_4_desc: "Navigate your career path with expert guidance and opportunities",
+      font_family: "system-ui",
+      font_size: 16
+    };
+
+    let config = { ...defaultConfig };
+
+    async function onConfigChange(newConfig) {
+      config = { ...newConfig };
+      
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.body.style.background = config.background_color || defaultConfig.background_color;
+      
+      const navbar = document.getElementById('navbar');
+      navbar.style.background = `linear-gradient(180deg, ${config.background_color || defaultConfig.background_color} 0%, transparent 100%)`;
+      
+      const siteTitle = document.getElementById('site-title');
+      siteTitle.textContent = config.site_title || defaultConfig.site_title;
+      siteTitle.style.color = config.text_color || defaultConfig.text_color;
+      siteTitle.style.fontSize = `${baseSize * 1.875}px`;
+      
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.style.color = config.text_color || defaultConfig.text_color;
+        link.style.fontSize = `${baseSize * 1.125}px`;
+      });
+      
+      const heroTitle = document.getElementById('hero-title');
+      heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
+      heroTitle.style.color = config.text_color || defaultConfig.text_color;
+      heroTitle.style.fontSize = `${baseSize * 3.75}px`;
+      
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      heroSubtitle.style.color = config.text_color || defaultConfig.text_color;
+      heroSubtitle.style.fontSize = `${baseSize * 1.5}px`;
+      
+      const ctaButton = document.getElementById('cta-button');
+      ctaButton.textContent = config.cta_button || defaultConfig.cta_button;
+      ctaButton.style.background = config.button_color || defaultConfig.button_color;
+      ctaButton.style.color = config.text_color || defaultConfig.text_color;
+      ctaButton.style.fontSize = `${baseSize * 1.25}px`;
+      
+      // Update feature cards
+      for (let i = 1; i <= 4; i++) {
+        const featureTitle = document.getElementById(`feature-${i}-title`);
+        const featureDesc = document.getElementById(`feature-${i}-desc`);
+        const icon = document.getElementById(`icon-${i}`);
+        
+        featureTitle.textContent = config[`feature_${i}_title`] || defaultConfig[`feature_${i}_title`];
+        featureTitle.style.color = config.text_color || defaultConfig.text_color;
+        featureTitle.style.fontSize = `${baseSize * 1.5}px`;
+        
+        featureDesc.textContent = config[`feature_${i}_desc`] || defaultConfig[`feature_${i}_desc`];
+        featureDesc.style.color = config.text_color || defaultConfig.text_color;
+        featureDesc.style.fontSize = `${baseSize}px`;
+        
+        icon.style.background = config.accent_color || defaultConfig.accent_color;
+      }
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        .nav-link::after {
+          background: ${config.accent_color || defaultConfig.accent_color} !important;
+        }
+      `;
+      document.head.appendChild(style);
+      
+      render3DBackground();
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.particle_color || defaultConfig.particle_color,
+            set: (value) => {
+              config.particle_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ particle_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              config.accent_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ accent_color: value });
+              }
+            }
+          },
+          {
+            get: () => config.button_color || defaultConfig.button_color,
+            set: (value) => {
+              config.button_color = value;
+              if (window.elementSdk) {
+                window.elementSdk.setConfig({ button_color: value });
+              }
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => {
+            config.font_family = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => {
+            config.font_size = value;
+            if (window.elementSdk) {
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["site_title", config.site_title || defaultConfig.site_title],
+        ["hero_title", config.hero_title || defaultConfig.hero_title],
+        ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+        ["cta_button", config.cta_button || defaultConfig.cta_button],
+        ["feature_1_title", config.feature_1_title || defaultConfig.feature_1_title],
+        ["feature_1_desc", config.feature_1_desc || defaultConfig.feature_1_desc],
+        ["feature_2_title", config.feature_2_title || defaultConfig.feature_2_title],
+        ["feature_2_desc", config.feature_2_desc || defaultConfig.feature_2_desc],
+        ["feature_3_title", config.feature_3_title || defaultConfig.feature_3_title],
+        ["feature_3_desc", config.feature_3_desc || defaultConfig.feature_3_desc],
+        ["feature_4_title", config.feature_4_title || defaultConfig.feature_4_title],
+        ["feature_4_desc", config.feature_4_desc || defaultConfig.feature_4_desc]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    function render3DBackground() {
+      const canvas = document.getElementById('canvas3d');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      
+      const particles = [];
+      const particleCount = 80;
+      
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.z = Math.random() * 1000;
+          this.size = Math.random() * 3 + 1;
+          this.speedX = (Math.random() - 0.5) * 0.5;
+          this.speedY = (Math.random() - 0.5) * 0.5;
+          this.speedZ = Math.random() * 2 + 1;
+        }
+        
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.z -= this.speedZ;
+          
+          if (this.z <= 0) {
+            this.z = 1000;
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+          }
+          
+          if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        }
+        
+        draw() {
+          const scale = 1000 / (1000 + this.z);
+          const x2d = (this.x - canvas.width / 2) * scale + canvas.width / 2;
+          const y2d = (this.y - canvas.height / 2) * scale + canvas.height / 2;
+          const size2d = this.size * scale;
+          
+          const opacity = 1 - (this.z / 1000);
+          ctx.fillStyle = config.particle_color || defaultConfig.particle_color;
+          ctx.globalAlpha = opacity * 0.8;
+          
+          ctx.beginPath();
+          ctx.arc(x2d, y2d, size2d, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.globalAlpha = 1;
+        }
+      }
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+      
+      function animate() {
+        ctx.fillStyle = config.background_color || defaultConfig.background_color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach(particle => {
+          particle.update();
+          particle.draw();
+        });
+        
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 150) {
+              const scale1 = 1000 / (1000 + particles[i].z);
+              const scale2 = 1000 / (1000 + particles[j].z);
+              const x1 = (particles[i].x - canvas.width / 2) * scale1 + canvas.width / 2;
+              const y1 = (particles[i].y - canvas.height / 2) * scale1 + canvas.height / 2;
+              const x2 = (particles[j].x - canvas.width / 2) * scale2 + canvas.width / 2;
+              const y2 = (particles[j].y - canvas.height / 2) * scale2 + canvas.height / 2;
+              
+              ctx.strokeStyle = config.particle_color || defaultConfig.particle_color;
+              ctx.globalAlpha = (1 - distance / 150) * 0.3;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(x1, y1);
+              ctx.lineTo(x2, y2);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    window.addEventListener('resize', () => {
+      render3DBackground();
+    });
+
+    onConfigChange(defaultConfig);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0d626646b547d5',t:'MTc2NjIxNTMwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
