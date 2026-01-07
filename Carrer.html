@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Career Guide</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="w-full h-full overflow-auto"></div>
+  <script>
+    const defaultConfig = {
+      background_color: "#f0f4f8",
+      card_background: "#ffffff",
+      primary_color: "#2563eb",
+      text_color: "#1e293b",
+      accent_color: "#10b981",
+      font_family: "Inter",
+      font_size: 16,
+      main_title: "Discover Your Tech Career Path",
+      subtitle: "Find trending jobs, essential skills, and salary expectations in your field",
+      software_button: "Software",
+      hardware_button: "Hardware",
+      both_button: "Both Fields"
+    };
+
+    const careerData = {
+      software: {
+        jobs: [
+          { title: "Full Stack Developer", demand: "Very High", growth: "+23%" },
+          { title: "AI/ML Engineer", demand: "Extremely High", growth: "+35%" },
+          { title: "Cloud Architect", demand: "High", growth: "+28%" },
+          { title: "DevOps Engineer", demand: "High", growth: "+22%" },
+          { title: "Mobile App Developer", demand: "High", growth: "+19%" }
+        ],
+        skills: [
+          "Python, JavaScript, TypeScript",
+          "React, Node.js, or similar frameworks",
+          "Cloud platforms (AWS, Azure, GCP)",
+          "Docker & Kubernetes",
+          "Git & CI/CD pipelines",
+          "Database management (SQL/NoSQL)",
+          "API design & microservices",
+          "Agile methodologies"
+        ],
+        salary: {
+          entry: "$65,000 - $85,000",
+          mid: "$90,000 - $130,000",
+          senior: "$140,000 - $200,000+"
+        }
+      },
+      hardware: {
+        jobs: [
+          { title: "Embedded Systems Engineer", demand: "High", growth: "+18%" },
+          { title: "IoT Solutions Architect", demand: "Very High", growth: "+31%" },
+          { title: "FPGA Engineer", demand: "High", growth: "+16%" },
+          { title: "Hardware Design Engineer", demand: "High", growth: "+20%" },
+          { title: "PCB Design Engineer", demand: "Medium-High", growth: "+14%" }
+        ],
+        skills: [
+          "C, C++, Verilog/VHDL",
+          "Embedded systems programming",
+          "Circuit design & analysis",
+          "PCB design tools (Altium, Eagle)",
+          "Microcontrollers & processors",
+          "Signal processing",
+          "Hardware testing & debugging",
+          "IoT protocols (MQTT, CoAP)"
+        ],
+        salary: {
+          entry: "$60,000 - $80,000",
+          mid: "$85,000 - $120,000",
+          senior: "$130,000 - $180,000+"
+        }
+      },
+      both: {
+        jobs: [
+          { title: "Robotics Engineer", demand: "Very High", growth: "+26%" },
+          { title: "IoT Full Stack Engineer", demand: "Extremely High", growth: "+33%" },
+          { title: "Automotive Systems Engineer", demand: "High", growth: "+24%" },
+          { title: "Smart Device Engineer", demand: "Very High", growth: "+29%" },
+          { title: "Systems Integration Engineer", demand: "High", growth: "+21%" }
+        ],
+        skills: [
+          "Both software & hardware languages",
+          "Embedded systems + cloud integration",
+          "Hardware-software co-design",
+          "Real-time operating systems",
+          "Sensor integration & data processing",
+          "Edge computing",
+          "System architecture design",
+          "Cross-functional collaboration"
+        ],
+        salary: {
+          entry: "$70,000 - $90,000",
+          mid: "$95,000 - $140,000",
+          senior: "$150,000 - $220,000+"
+        }
+      }
+    };
+
+    let currentSelection = null;
+
+    function renderHome() {
+      const baseSize = window.elementSdk?.config?.font_size || defaultConfig.font_size;
+      const customFont = window.elementSdk?.config?.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      const bgColor = window.elementSdk?.config?.background_color || defaultConfig.background_color;
+      const cardBg = window.elementSdk?.config?.card_background || defaultConfig.card_background;
+      const primaryColor = window.elementSdk?.config?.primary_color || defaultConfig.primary_color;
+      const textColor = window.elementSdk?.config?.text_color || defaultConfig.text_color;
+      const mainTitle = window.elementSdk?.config?.main_title || defaultConfig.main_title;
+      const subtitle = window.elementSdk?.config?.subtitle || defaultConfig.subtitle;
+      const softwareBtn = window.elementSdk?.config?.software_button || defaultConfig.software_button;
+      const hardwareBtn = window.elementSdk?.config?.hardware_button || defaultConfig.hardware_button;
+      const bothBtn = window.elementSdk?.config?.both_button || defaultConfig.both_button;
+
+      return `
+        <div style="background-color: ${bgColor}; min-height: 100%; font-family: ${fontFamily}; color: ${textColor}; padding: 2rem;">
+          <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 3rem;">
+              <h1 style="font-size: ${baseSize * 2.5}px; font-weight: 700; margin-bottom: 1rem;">${mainTitle}</h1>
+              <p style="font-size: ${baseSize * 1.1}px; opacity: 0.8;">${subtitle}</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+              <button onclick="selectField('software')" class="card" style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px; border: 2px solid transparent; cursor: pointer; text-align: center; transition: all 0.2s;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 0.5rem; color: ${primaryColor};">${softwareBtn}</h2>
+                <p style="font-size: ${baseSize * 0.9}px; opacity: 0.7;">Web, Mobile, AI, Cloud & More</p>
+              </button>
+              
+              <button onclick="selectField('hardware')" class="card" style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px; border: 2px solid transparent; cursor: pointer; text-align: center; transition: all 0.2s;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔧</div>
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 0.5rem; color: ${primaryColor};">${hardwareBtn}</h2>
+                <p style="font-size: ${baseSize * 0.9}px; opacity: 0.7;">Embedded, IoT, Circuit Design</p>
+              </button>
+              
+              <button onclick="selectField('both')" class="card" style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px; border: 2px solid transparent; cursor: pointer; text-align: center; transition: all 0.2s;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 0.5rem; color: ${primaryColor};">${bothBtn}</h2>
+                <p style="font-size: ${baseSize * 0.9}px; opacity: 0.7;">Robotics, IoT Systems & Integration</p>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderResults(field) {
+      const data = careerData[field];
+      const baseSize = window.elementSdk?.config?.font_size || defaultConfig.font_size;
+      const customFont = window.elementSdk?.config?.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      const bgColor = window.elementSdk?.config?.background_color || defaultConfig.background_color;
+      const cardBg = window.elementSdk?.config?.card_background || defaultConfig.card_background;
+      const primaryColor = window.elementSdk?.config?.primary_color || defaultConfig.primary_color;
+      const textColor = window.elementSdk?.config?.text_color || defaultConfig.text_color;
+      const accentColor = window.elementSdk?.config?.accent_color || defaultConfig.accent_color;
+
+      const fieldTitles = {
+        software: "Software Engineering",
+        hardware: "Hardware Engineering",
+        both: "Software & Hardware Engineering"
+      };
+
+      return `
+        <div style="background-color: ${bgColor}; min-height: 100%; font-family: ${fontFamily}; color: ${textColor}; padding: 2rem;">
+          <div style="max-width: 1200px; margin: 0 auto;">
+            <button onclick="goBack()" style="background-color: ${cardBg}; color: ${primaryColor}; padding: 0.75rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; margin-bottom: 2rem; font-size: ${baseSize}px; font-weight: 500;">
+              ← Back to Selection
+            </button>
+            
+            <div class="fade-in">
+              <h1 style="font-size: ${baseSize * 2}px; font-weight: 700; margin-bottom: 2rem; text-align: center;">${fieldTitles[field]}</h1>
+              
+              <div style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 1.5rem; color: ${primaryColor};">📈 Trending Jobs</h2>
+                <div style="display: grid; gap: 1rem;">
+                  ${data.jobs.map(job => `
+                    <div style="padding: 1rem; background-color: ${bgColor}; border-radius: 8px;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <h3 style="font-size: ${baseSize * 1.1}px; font-weight: 600;">${job.title}</h3>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                          <span style="background-color: ${accentColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: ${baseSize * 0.85}px;">Demand: ${job.demand}</span>
+                          <span style="background-color: ${primaryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: ${baseSize * 0.85}px;">Growth: ${job.growth}</span>
+                        </div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <div style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 1.5rem; color: ${primaryColor};">🎯 Essential Skills</h2>
+                <div style="display: grid; gap: 0.75rem;">
+                  ${data.skills.map(skill => `
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <span style="color: ${accentColor}; font-size: ${baseSize * 1.2}px;">✓</span>
+                      <span style="font-size: ${baseSize}px;">${skill}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <div style="background-color: ${cardBg}; padding: 2rem; border-radius: 12px;">
+                <h2 style="font-size: ${baseSize * 1.5}px; font-weight: 600; margin-bottom: 1.5rem; color: ${primaryColor};">💰 Salary Expectations (USD/year)</h2>
+                <div style="display: grid; gap: 1.5rem;">
+                  <div>
+                    <h3 style="font-size: ${baseSize * 1.1}px; font-weight: 600; margin-bottom: 0.5rem; color: ${accentColor};">Entry Level (0-2 years)</h3>
+                    <p style="font-size: ${baseSize * 1.2}px; font-weight: 700;">${data.salary.entry}</p>
+                  </div>
+                  <div>
+                    <h3 style="font-size: ${baseSize * 1.1}px; font-weight: 600; margin-bottom: 0.5rem; color: ${accentColor};">Mid Level (3-7 years)</h3>
+                    <p style="font-size: ${baseSize * 1.2}px; font-weight: 700;">${data.salary.mid}</p>
+                  </div>
+                  <div>
+                    <h3 style="font-size: ${baseSize * 1.1}px; font-weight: 600; margin-bottom: 0.5rem; color: ${accentColor};">Senior Level (8+ years)</h3>
+                    <p style="font-size: ${baseSize * 1.2}px; font-weight: 700;">${data.salary.senior}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectField(field) {
+      currentSelection = field;
+      render();
+    }
+
+    function goBack() {
+      currentSelection = null;
+      render();
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      if (currentSelection) {
+        app.innerHTML = renderResults(currentSelection);
+      } else {
+        app.innerHTML = renderHome();
+      }
+    }
+
+    async function onConfigChange(config) {
+      render();
+    }
+
+    const capabilities = {
+      recolorables: [
+        {
+          get: () => window.elementSdk?.config?.background_color || defaultConfig.background_color,
+          set: (value) => {
+            if (window.elementSdk?.config) {
+              window.elementSdk.config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          }
+        },
+        {
+          get: () => window.elementSdk?.config?.card_background || defaultConfig.card_background,
+          set: (value) => {
+            if (window.elementSdk?.config) {
+              window.elementSdk.config.card_background = value;
+              window.elementSdk.setConfig({ card_background: value });
+            }
+          }
+        },
+        {
+          get: () => window.elementSdk?.config?.primary_color || defaultConfig.primary_color,
+          set: (value) => {
+            if (window.elementSdk?.config) {
+              window.elementSdk.config.primary_color = value;
+              window.elementSdk.setConfig({ primary_color: value });
+            }
+          }
+        },
+        {
+          get: () => window.elementSdk?.config?.text_color || defaultConfig.text_color,
+          set: (value) => {
+            if (window.elementSdk?.config) {
+              window.elementSdk.config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          }
+        },
+        {
+          get: () => window.elementSdk?.config?.accent_color || defaultConfig.accent_color,
+          set: (value) => {
+            if (window.elementSdk?.config) {
+              window.elementSdk.config.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        }
+      ],
+      borderables: [],
+      fontEditable: {
+        get: () => window.elementSdk?.config?.font_family || defaultConfig.font_family,
+        set: (value) => {
+          if (window.elementSdk?.config) {
+            window.elementSdk.config.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        }
+      },
+      fontSizeable: {
+        get: () => window.elementSdk?.config?.font_size || defaultConfig.font_size,
+        set: (value) => {
+          if (window.elementSdk?.config) {
+            window.elementSdk.config.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      }
+    };
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["main_title", config.main_title || defaultConfig.main_title],
+        ["subtitle", config.subtitle || defaultConfig.subtitle],
+        ["software_button", config.software_button || defaultConfig.software_button],
+        ["hardware_button", config.hardware_button || defaultConfig.hardware_button],
+        ["both_button", config.both_button || defaultConfig.both_button]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: () => capabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    render();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0cff10441f84d1',t:'MTc2NjIxMTIzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
