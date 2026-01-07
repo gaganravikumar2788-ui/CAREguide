@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Marks Analyzer</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="w-full h-full overflow-auto" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+   <div style="max-width: 800px; margin: 0 auto; padding: 40px 20px;"><!-- Header -->
+    <div style="text-align: center; margin-bottom: 40px;">
+     <h1 id="page-title" style="font-size: 48px; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Student Performance Analyzer</h1>
+     <p id="subtitle" style="font-size: 20px; color: #e0e7ff;">Discover your academic strengths and areas for improvement</p>
+    </div><!-- Input Form Card -->
+    <div style="background: #ffffff; border-radius: 20px; padding: 40px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); margin-bottom: 30px;">
+     <h2 style="font-size: 28px; font-weight: 600; color: #4c1d95; margin-bottom: 24px;">Enter Your Marks (out of 80)</h2>
+     <form id="marks-form">
+      <div style="display: grid; gap: 20px;"><!-- Maths -->
+       <div><label for="maths" id="maths-label" style="display: block; font-size: 16px; font-weight: 600; color: #6b21a8; margin-bottom: 8px;">Mathematics</label> <input type="number" id="maths" min="0" max="80" required style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e7ff; border-radius: 12px; background: #f8faff; color: #1e1b4b; transition: all 0.3s;">
+       </div><!-- Physics -->
+       <div><label for="physics" id="physics-label" style="display: block; font-size: 16px; font-weight: 600; color: #6b21a8; margin-bottom: 8px;">Physics</label> <input type="number" id="physics" min="0" max="80" required style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e7ff; border-radius: 12px; background: #f8faff; color: #1e1b4b; transition: all 0.3s;">
+       </div><!-- Chemistry -->
+       <div><label for="chemistry" id="chemistry-label" style="display: block; font-size: 16px; font-weight: 600; color: #6b21a8; margin-bottom: 8px;">Chemistry</label> <input type="number" id="chemistry" min="0" max="80" required style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e7ff; border-radius: 12px; background: #f8faff; color: #1e1b4b; transition: all 0.3s;">
+       </div><!-- Biology -->
+       <div><label for="biology" id="biology-label" style="display: block; font-size: 16px; font-weight: 600; color: #b991d9; margin-bottom: 8px;">Biology</label> <input type="number" id="biology" min="0" max="80" required style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e7ff; border-radius: 12px; background: #f8faff; color: #1e1b4b; transition: all 0.3s;">
+       </div><!-- Computer Science -->
+       <div><label for="computer" id="computer-label" style="display: block; font-size: 16px; font-weight: 600; color: #6b21a8; margin-bottom: 8px;">Computer Science</label> <input type="number" id="computer" min="0" max="80" required style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e7ff; border-radius: 12px; background: #f8faff; color: #1e1b4b; transition: all 0.3s;">
+       </div>
+      </div><button type="submit" id="analyze-btn" style="width: 100%; margin-top: 28px; padding: 16px; font-size: 18px; font-weight: 600; color: #ffffff; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">Analyze Performance</button>
+     </form>
+    </div><!-- Results Section -->
+    <div id="results" style="display: none;"><!-- Overall Performance -->
+     <div style="background: #ffffff; border-radius: 20px; padding: 32px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); margin-bottom: 24px;">
+      <h2 style="font-size: 24px; font-weight: 600; color: #4c1d95; margin-bottom: 20px;">📊 Overall Performance</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+       <div style="text-align: center; padding: 20px; background: #f0f9ff; border-radius: 12px;">
+        <p style="font-size: 14px; color: #7c3aed; font-weight: 600; margin-bottom: 8px;">Total Marks</p>
+        <p id="total-marks" style="font-size: 32px; font-weight: 700; color: #5b21b6;"></p>
+       </div>
+       <div style="text-align: center; padding: 20px; background: #fef3c7; border-radius: 12px;">
+        <p style="font-size: 14px; color: #d97706; font-weight: 600; margin-bottom: 8px;">Average Score</p>
+        <p id="average-score" style="font-size: 32px; font-weight: 700; color: #b45309;"></p>
+       </div>
+       <div style="text-align: center; padding: 20px; background: #dcfce7; border-radius: 12px;">
+        <p style="font-size: 14px; color: #15803d; font-weight: 600; margin-bottom: 8px;">Percentage</p>
+        <p id="percentage" style="font-size: 32px; font-weight: 700; color: #166534;"></p>
+       </div>
+      </div>
+     </div><!-- Strengths -->
+     <div style="background: #dcfce7; border-radius: 20px; padding: 32px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); margin-bottom: 24px; border: 3px solid #86efac;">
+      <h2 style="font-size: 24px; font-weight: 600; color: #14532d; margin-bottom: 16px;">💪 Your Strengths</h2>
+      <div id="strengths-list"></div>
+     </div><!-- Areas for Improvement -->
+     <div style="background: #fef3c7; border-radius: 20px; padding: 32px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 3px solid #fde047;">
+      <h2 style="font-size: 24px; font-weight: 600; color: #713f12; margin-bottom: 16px;">📈 Areas for Improvement</h2>
+      <div id="improvements-list"></div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      page_title: "Student Performance Analyzer",
+      subtitle: "Discover your academic strengths and areas for improvement",
+      maths_label: "Mathematics",
+      physics_label: "Physics",
+      chemistry_label: "Chemistry",
+      biology_label: "Biology",
+      computer_label: "Computer Science",
+      button_text: "Analyze Performance",
+      background_color: "#667eea",
+      card_background: "#ffffff",
+      text_color: "#4c1d95",
+      button_color: "#667eea"
+    };
+
+    async function onConfigChange(config) {
+      document.getElementById('page-title').textContent = config.page_title || defaultConfig.page_title;
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      document.getElementById('maths-label').textContent = config.maths_label || defaultConfig.maths_label;
+      document.getElementById('physics-label').textContent = config.physics_label || defaultConfig.physics_label;
+      document.getElementById('chemistry-label').textContent = config.chemistry_label || defaultConfig.chemistry_label;
+      document.getElementById('biology-label').textContent = config.biology_label || defaultConfig.biology_label;
+      document.getElementById('computer-label').textContent = config.computer_label || defaultConfig.computer_label;
+      document.getElementById('analyze-btn').textContent = config.button_text || defaultConfig.button_text;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ["page_title", config.page_title || defaultConfig.page_title],
+        ["subtitle", config.subtitle || defaultConfig.subtitle],
+        ["maths_label", config.maths_label || defaultConfig.maths_label],
+        ["physics_label", config.physics_label || defaultConfig.physics_label],
+        ["chemistry_label", config.chemistry_label || defaultConfig.chemistry_label],
+        ["biology_label", config.biology_label || defaultConfig.biology_label],
+        ["computer_label", config.computer_label || defaultConfig.computer_label],
+        ["button_text", config.button_text || defaultConfig.button_text]
+      ]);
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Add focus effects
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', function() {
+        this.style.borderColor = '#8b5cf6';
+        this.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.1)';
+      });
+      input.addEventListener('blur', function() {
+        this.style.borderColor = '#e0e7ff';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    document.getElementById('marks-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const subjects = {
+        'Mathematics': parseInt(document.getElementById('maths').value),
+        'Physics': parseInt(document.getElementById('physics').value),
+        'Chemistry': parseInt(document.getElementById('chemistry').value),
+        'Biology': parseInt(document.getElementById('biology').value),
+        'Computer Science': parseInt(document.getElementById('computer').value)
+      };
+
+      const totalMarks = Object.values(subjects).reduce((a, b) => a + b, 0);
+      const averageScore = (totalMarks / 5).toFixed(1);
+      const percentage = ((totalMarks / 400) * 100).toFixed(1);
+
+      document.getElementById('total-marks').textContent = `${totalMarks}/400`;
+      document.getElementById('average-score').textContent = `${averageScore}/80`;
+      document.getElementById('percentage').textContent = `${percentage}%`;
+
+      // Calculate strengths (70% or above) and weaknesses (below 60%)
+      const sortedSubjects = Object.entries(subjects).sort((a, b) => b[1] - a[1]);
+      const strengths = sortedSubjects.filter(([_, marks]) => (marks / 80) * 100 >= 70);
+      const improvements = sortedSubjects.filter(([_, marks]) => (marks / 80) * 100 < 60);
+
+      // Display strengths
+      const strengthsList = document.getElementById('strengths-list');
+      strengthsList.innerHTML = '';
+      if (strengths.length > 0) {
+        strengths.forEach(([subject, marks]) => {
+          const percentage = ((marks / 80) * 100).toFixed(1);
+          const item = document.createElement('div');
+          item.style.cssText = 'padding: 16px; margin-bottom: 12px; background: #ffffff; border-radius: 12px; border-left: 4px solid #22c55e;';
+          item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 18px; font-weight: 600; color: #14532d;">${subject}</span>
+              <span style="font-size: 20px; font-weight: 700; color: #15803d;">${marks}/80 (${percentage}%)</span>
+            </div>
+            <p style="margin-top: 8px; font-size: 14px; color: #166534;">Excellent performance! Keep up the great work! 🌟</p>
+          `;
+          strengthsList.appendChild(item);
+        });
+      } else {
+        strengthsList.innerHTML = '<p style="color: #166534; font-size: 16px;">Work hard to achieve scores above 70% to build your strengths!</p>';
+      }
+
+      // Display improvements
+      const improvementsList = document.getElementById('improvements-list');
+      improvementsList.innerHTML = '';
+      if (improvements.length > 0) {
+        improvements.forEach(([subject, marks]) => {
+          const percentage = ((marks / 80) * 100).toFixed(1);
+          const item = document.createElement('div');
+          item.style.cssText = 'padding: 16px; margin-bottom: 12px; background: #ffffff; border-radius: 12px; border-left: 4px solid #f59e0b;';
+          item.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 18px; font-weight: 600; color: #713f12;">${subject}</span>
+              <span style="font-size: 20px; font-weight: 700; color: #b45309;">${marks}/80 (${percentage}%)</span>
+            </div>
+            <p style="margin-top: 8px; font-size: 14px; color: #92400e;">Focus more on this subject. Consider extra practice, tutoring, or study groups. 📚</p>
+          `;
+          improvementsList.appendChild(item);
+        });
+      } else {
+        improvementsList.innerHTML = '<p style="color: #92400e; font-size: 16px;">Great job! All subjects are performing well. Keep maintaining your performance! 🎉</p>';
+      }
+
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0c580bd1aa47d5',t:'MTc2NjIwNDM5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
