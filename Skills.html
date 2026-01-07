@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Language Explorer</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .language-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .language-card:hover {
+      transform: translateY(-4px);
+    }
+    
+    .modal-overlay {
+      backdrop-filter: blur(4px);
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto"><!-- Header -->
+   <header id="header" class="text-white py-12 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+     <h1 id="main-title" class="text-5xl font-bold mb-4">Programming Language Explorer</h1>
+     <p id="subtitle" class="text-xl opacity-90">Discover courses, information, and notes for your favorite programming languages</p>
+    </div>
+   </header><!-- Search Section -->
+   <main class="max-w-6xl mx-auto px-6 py-8">
+    <div class="mb-8"><input type="text" id="searchInput" placeholder="Search for a programming language..." class="w-full px-6 py-4 text-lg border-2 rounded-lg focus:outline-none focus:ring-2">
+    </div><!-- Language Cards Grid -->
+    <div id="languageGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Cards will be populated by JavaScript -->
+    </div>
+   </main><!-- Modal for Language Details -->
+   <div id="modal" class="hidden fixed inset-0 z-50 modal-overlay" style="background-color: rgba(0, 0, 0, 0.5);">
+    <div class="flex items-center justify-center min-h-full p-4">
+     <div id="modalContent" class="rounded-xl shadow-2xl max-w-4xl w-full max-h-[90%] overflow-y-auto fade-in">
+      <div class="sticky top-0 z-10 flex justify-between items-center p-6 border-b">
+       <h2 id="modalTitle" class="text-3xl font-bold"></h2><button id="closeModal" class="text-4xl font-bold hover:opacity-70 transition-opacity" aria-label="Close modal">×</button>
+      </div>
+      <div class="p-6">
+       <div class="mb-6">
+        <h3 class="text-2xl font-semibold mb-3">About</h3>
+        <p id="modalDescription" class="text-lg leading-relaxed"></p>
+       </div>
+       <div class="mb-6">
+        <h3 class="text-2xl font-semibold mb-3">Course Information</h3>
+        <div id="modalCourseInfo" class="space-y-2"></div>
+       </div>
+       <div class="mb-6">
+        <h3 class="text-2xl font-semibold mb-3">Learning Notes</h3>
+        <div id="modalNotes" class="space-y-3"></div>
+       </div>
+       <div>
+        <h3 class="text-2xl font-semibold mb-3">Key Features</h3>
+        <ul id="modalFeatures" class="list-disc list-inside space-y-2"></ul>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#6366f1",
+      card_background: "#ffffff",
+      text_color: "#1f2937",
+      primary_action: "#8b5cf6",
+      secondary_action: "#ec4899",
+      main_title: "Programming Language Explorer",
+      subtitle: "Discover courses, information, and notes for your favorite programming languages",
+      search_placeholder: "Search for a programming language...",
+      font_family: "system-ui",
+      font_size: 16
+    };
+
+    const languagesData = [
+      {
+        name: "C",
+        description: "C is a powerful general-purpose programming language that provides low-level access to memory and is widely used for system programming, embedded systems, and operating systems.",
+        courseInfo: [
+          "Duration: 8-12 weeks",
+          "Level: Beginner to Intermediate",
+          "Prerequisites: Basic computer knowledge",
+          "Career Paths: Systems Programming, Embedded Systems, OS Development"
+        ],
+        notes: [
+          "Start with understanding pointers and memory management",
+          "Practice with data structures like arrays, linked lists, and trees",
+          "Learn about file handling and preprocessing directives",
+          "Master function pointers and dynamic memory allocation"
+        ],
+        features: ["Fast execution", "Low-level memory access", "Portable", "Foundation for many languages"]
+      },
+      {
+        name: "Python",
+        description: "Python is a high-level, interpreted programming language known for its simplicity and readability. It's widely used in web development, data science, artificial intelligence, and automation.",
+        courseInfo: [
+          "Duration: 6-10 weeks",
+          "Level: Beginner Friendly",
+          "Prerequisites: None",
+          "Career Paths: Data Science, Web Development, AI/ML, Automation"
+        ],
+        notes: [
+          "Focus on understanding Python syntax and data types",
+          "Learn about list comprehensions and lambda functions",
+          "Explore popular libraries like NumPy, Pandas, and Matplotlib",
+          "Practice with real-world projects and automation scripts"
+        ],
+        features: ["Easy to learn", "Extensive libraries", "Great for AI/ML", "Strong community support"]
+      },
+      {
+        name: "Django",
+        description: "Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It follows the model-template-views architectural pattern.",
+        courseInfo: [
+          "Duration: 10-14 weeks",
+          "Level: Intermediate",
+          "Prerequisites: Python basics, HTML/CSS",
+          "Career Paths: Full-Stack Developer, Backend Developer, Web Developer"
+        ],
+        notes: [
+          "Understand the MVT (Model-View-Template) architecture",
+          "Learn Django ORM for database operations",
+          "Master Django's authentication and authorization system",
+          "Practice building REST APIs with Django REST Framework"
+        ],
+        features: ["Batteries included", "Built-in admin panel", "ORM system", "Security features"]
+      },
+      {
+        name: "HTML",
+        description: "HTML (HyperText Markup Language) is the standard markup language for creating web pages. It describes the structure and content of web documents.",
+        courseInfo: [
+          "Duration: 3-5 weeks",
+          "Level: Beginner",
+          "Prerequisites: None",
+          "Career Paths: Web Developer, Frontend Developer, UI Designer"
+        ],
+        notes: [
+          "Learn semantic HTML5 elements for better structure",
+          "Understand forms, tables, and multimedia elements",
+          "Practice with accessibility attributes (ARIA labels)",
+          "Master the document structure and meta tags"
+        ],
+        features: ["Foundation of web", "Easy to learn", "Semantic elements", "Cross-browser compatible"]
+      },
+      {
+        name: "CSS",
+        description: "CSS (Cascading Style Sheets) is used to style and layout web pages. It controls colors, fonts, spacing, and positioning of HTML elements.",
+        courseInfo: [
+          "Duration: 4-6 weeks",
+          "Level: Beginner to Intermediate",
+          "Prerequisites: HTML basics",
+          "Career Paths: Frontend Developer, UI Designer, Web Designer"
+        ],
+        notes: [
+          "Master the box model and positioning (flexbox, grid)",
+          "Learn responsive design with media queries",
+          "Understand CSS specificity and inheritance",
+          "Practice with animations and transitions"
+        ],
+        features: ["Responsive design", "Animations", "Grid & Flexbox", "CSS Variables"]
+      },
+      {
+        name: "JavaScript",
+        description: "JavaScript is a versatile programming language that enables interactive web pages. It's an essential part of web applications and runs in the browser.",
+        courseInfo: [
+          "Duration: 8-12 weeks",
+          "Level: Beginner to Advanced",
+          "Prerequisites: HTML/CSS basics",
+          "Career Paths: Frontend Developer, Full-Stack Developer, Node.js Developer"
+        ],
+        notes: [
+          "Understand closures, promises, and async/await",
+          "Learn DOM manipulation and event handling",
+          "Master ES6+ features (arrow functions, destructuring, modules)",
+          "Practice with frameworks like React, Vue, or Angular"
+        ],
+        features: ["Client-side scripting", "Event-driven", "Async programming", "Large ecosystem"]
+      },
+      {
+        name: "Java",
+        description: "Java is a class-based, object-oriented programming language designed to have minimal implementation dependencies. It's widely used for enterprise applications.",
+        courseInfo: [
+          "Duration: 12-16 weeks",
+          "Level: Beginner to Advanced",
+          "Prerequisites: Basic programming concepts",
+          "Career Paths: Enterprise Developer, Android Developer, Backend Developer"
+        ],
+        notes: [
+          "Master OOP concepts: inheritance, polymorphism, encapsulation",
+          "Learn about collections framework and generics",
+          "Understand multithreading and concurrency",
+          "Practice with Spring framework for enterprise applications"
+        ],
+        features: ["Platform independent", "Object-oriented", "Robust and secure", "Multithreading support"]
+      },
+      {
+        name: "React",
+        description: "React is a JavaScript library for building user interfaces, particularly single-page applications. It uses a component-based architecture.",
+        courseInfo: [
+          "Duration: 8-10 weeks",
+          "Level: Intermediate",
+          "Prerequisites: JavaScript (ES6+), HTML/CSS",
+          "Career Paths: Frontend Developer, React Developer, Full-Stack Developer"
+        ],
+        notes: [
+          "Understand components, props, and state management",
+          "Learn React Hooks (useState, useEffect, useContext)",
+          "Master React Router for navigation",
+          "Practice with state management libraries (Redux, Context API)"
+        ],
+        features: ["Component-based", "Virtual DOM", "JSX syntax", "Rich ecosystem"]
+      },
+      {
+        name: "SQL",
+        description: "SQL (Structured Query Language) is used to communicate with databases. It's essential for storing, manipulating, and retrieving data.",
+        courseInfo: [
+          "Duration: 6-8 weeks",
+          "Level: Beginner to Intermediate",
+          "Prerequisites: Basic database concepts",
+          "Career Paths: Database Administrator, Data Analyst, Backend Developer"
+        ],
+        notes: [
+          "Master CRUD operations (Create, Read, Update, Delete)",
+          "Learn JOIN operations and subqueries",
+          "Understand indexing and query optimization",
+          "Practice with different database systems (MySQL, PostgreSQL)"
+        ],
+        features: ["Data manipulation", "Declarative syntax", "ACID compliance", "Industry standard"]
+      },
+      {
+        name: "Node.js",
+        description: "Node.js is a JavaScript runtime built on Chrome's V8 engine. It enables JavaScript to run on the server side for building scalable network applications.",
+        courseInfo: [
+          "Duration: 10-12 weeks",
+          "Level: Intermediate",
+          "Prerequisites: JavaScript, basic backend concepts",
+          "Career Paths: Backend Developer, Full-Stack Developer, API Developer"
+        ],
+        notes: [
+          "Understand event-driven, non-blocking I/O model",
+          "Learn Express.js for building web servers",
+          "Master npm (Node Package Manager) and modules",
+          "Practice building REST APIs and working with databases"
+        ],
+        features: ["Fast execution", "Event-driven", "NPM ecosystem", "Scalable"]
+      },
+      {
+        name: "TypeScript",
+        description: "TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. It adds optional static typing and class-based object-oriented programming.",
+        courseInfo: [
+          "Duration: 6-8 weeks",
+          "Level: Intermediate",
+          "Prerequisites: JavaScript proficiency",
+          "Career Paths: Frontend Developer, Full-Stack Developer, Angular Developer"
+        ],
+        notes: [
+          "Learn type annotations and interfaces",
+          "Understand generics and advanced types",
+          "Master TypeScript with React or Angular",
+          "Practice with configuration and compiler options"
+        ],
+        features: ["Static typing", "Enhanced IDE support", "Better refactoring", "Catches errors early"]
+      },
+      {
+        name: "PHP",
+        description: "PHP is a popular server-side scripting language designed for web development. It's embedded in HTML and powers many content management systems.",
+        courseInfo: [
+          "Duration: 8-10 weeks",
+          "Level: Beginner to Intermediate",
+          "Prerequisites: HTML basics",
+          "Career Paths: Backend Developer, Full-Stack Developer, WordPress Developer"
+        ],
+        notes: [
+          "Learn PHP syntax and superglobals ($_GET, $_POST, $_SESSION)",
+          "Master database connectivity with MySQL",
+          "Understand MVC frameworks like Laravel",
+          "Practice with form handling and file uploads"
+        ],
+        features: ["Server-side scripting", "Database integration", "Large community", "CMS support"]
+      }
+    ];
+
+    let filteredLanguages = [...languagesData];
+
+    async function onConfigChange(config) {
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      // Apply colors
+      document.getElementById('app').style.backgroundColor = config.card_background || defaultConfig.card_background;
+      document.getElementById('header').style.backgroundColor = config.background_color || defaultConfig.background_color;
+      document.getElementById('searchInput').style.borderColor = config.primary_action || defaultConfig.primary_action;
+      document.getElementById('searchInput').style.color = config.text_color || defaultConfig.text_color;
+      document.getElementById('modalContent').style.backgroundColor = config.card_background || defaultConfig.card_background;
+      document.getElementById('modalContent').style.color = config.text_color || defaultConfig.text_color;
+      document.getElementById('closeModal').style.color = config.text_color || defaultConfig.text_color;
+      
+      // Apply focus ring color
+      const focusColor = config.primary_action || defaultConfig.primary_action;
+      document.getElementById('searchInput').addEventListener('focus', function() {
+        this.style.outline = `2px solid ${focusColor}`;
+        this.style.outlineOffset = '2px';
+      });
+      document.getElementById('searchInput').addEventListener('blur', function() {
+        this.style.outline = 'none';
+      });
+      
+      // Apply fonts
+      document.getElementById('main-title').style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.getElementById('subtitle').style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.getElementById('searchInput').style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.getElementById('modalTitle').style.fontFamily = `${customFont}, ${baseFontStack}`;
+      document.getElementById('modalContent').style.fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      // Apply font sizes
+      document.getElementById('main-title').style.fontSize = `${baseSize * 2}px`;
+      document.getElementById('subtitle').style.fontSize = `${baseSize * 1.25}px`;
+      document.getElementById('searchInput').style.fontSize = `${baseSize * 1.125}px`;
+      document.getElementById('modalTitle').style.fontSize = `${baseSize * 1.875}px`;
+      
+      // Apply text content
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      document.getElementById('searchInput').placeholder = config.search_placeholder || defaultConfig.search_placeholder;
+      
+      // Re-render cards with new colors
+      renderLanguageCards();
+    }
+
+    function renderLanguageCards() {
+      const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'system-ui, -apple-system, sans-serif';
+      
+      const grid = document.getElementById('languageGrid');
+      grid.innerHTML = '';
+      
+      filteredLanguages.forEach(lang => {
+        const card = document.createElement('div');
+        card.className = 'language-card rounded-xl shadow-lg p-6 border-2';
+        card.style.backgroundColor = config.card_background || defaultConfig.card_background;
+        card.style.borderColor = config.primary_action || defaultConfig.primary_action;
+        card.style.fontFamily = `${customFont}, ${baseFontStack}`;
+        
+        card.innerHTML = `
+          <h3 class="font-bold mb-2" style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${baseSize * 1.5}px;">${lang.name}</h3>
+          <p class="opacity-80" style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${baseSize}px;">${lang.description.substring(0, 100)}...</p>
+          <button class="mt-4 px-6 py-2 rounded-lg font-semibold transition-colors" style="background-color: ${config.primary_action || defaultConfig.primary_action}; color: white; font-size: ${baseSize * 0.875}px;">
+            Learn More
+          </button>
+        `;
+        
+        card.addEventListener('mouseenter', function() {
+          this.style.backgroundColor = config.primary_action || defaultConfig.primary_action;
+          this.style.color = 'white';
+          const title = this.querySelector('h3');
+          const description = this.querySelector('p');
+          const button = this.querySelector('button');
+          title.style.color = 'white';
+          description.style.color = 'white';
+          button.style.backgroundColor = config.secondary_action || defaultConfig.secondary_action;
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.backgroundColor = config.card_background || defaultConfig.card_background;
+          this.style.color = config.text_color || defaultConfig.text_color;
+          const title = this.querySelector('h3');
+          const description = this.querySelector('p');
+          const button = this.querySelector('button');
+          title.style.color = config.text_color || defaultConfig.text_color;
+          description.style.color = config.text_color || defaultConfig.text_color;
+          button.style.backgroundColor = config.primary_action || defaultConfig.primary_action;
+        });
+        
+        card.addEventListener('click', () => openModal(lang));
+        grid.appendChild(card);
+      });
+    }
+
+    function openModal(language) {
+      const config = window.elementSdk ? window.elementSdk.config : defaultConfig;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      
+      document.getElementById('modalTitle').textContent = language.name;
+      document.getElementById('modalDescription').textContent = language.description;
+      document.getElementById('modalDescription').style.fontSize = `${baseSize * 1.125}px`;
+      
+      const courseInfo = document.getElementById('modalCourseInfo');
+      courseInfo.innerHTML = language.courseInfo.map(info => 
+        `<div class="rounded p-3" style="background-color: ${config.background_color || defaultConfig.background_color}20; color: ${config.text_color || defaultConfig.text_color}; font-size: ${baseSize}px;">
+          <strong>•</strong> ${info}
+        </div>`
+      ).join('');
+      
+      const notes = document.getElementById('modalNotes');
+      notes.innerHTML = language.notes.map(note => 
+        `<div class="border-l-4 pl-4 py-2" style="border-color: ${config.secondary_action || defaultConfig.secondary_action}; color: ${config.text_color || defaultConfig.text_color}; font-size: ${baseSize}px;">
+          ${note}
+        </div>`
+      ).join('');
+      
+      const features = document.getElementById('modalFeatures');
+      features.innerHTML = language.features.map(feature => 
+        `<li style="color: ${config.text_color || defaultConfig.text_color}; font-size: ${baseSize}px;">${feature}</li>`
+      ).join('');
+      
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModalFunc() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+
+    document.getElementById('closeModal').addEventListener('click', closeModalFunc);
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModalFunc();
+      }
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      filteredLanguages = languagesData.filter(lang => 
+        lang.name.toLowerCase().includes(searchTerm)
+      );
+      renderLanguageCards();
+    });
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.card_background || defaultConfig.card_background,
+              set: (value) => {
+                config.card_background = value;
+                window.elementSdk.setConfig({ card_background: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action || defaultConfig.primary_action,
+              set: (value) => {
+                config.primary_action = value;
+                window.elementSdk.setConfig({ primary_action: value });
+              }
+            },
+            {
+              get: () => config.secondary_action || defaultConfig.secondary_action,
+              set: (value) => {
+                config.secondary_action = value;
+                window.elementSdk.setConfig({ secondary_action: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["main_title", config.main_title || defaultConfig.main_title],
+          ["subtitle", config.subtitle || defaultConfig.subtitle],
+          ["search_placeholder", config.search_placeholder || defaultConfig.search_placeholder]
+        ])
+      });
+    }
+
+    // Initial render
+    renderLanguageCards();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b0c84c9b27c3b7f',t:'MTc2NjIwNjIyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
